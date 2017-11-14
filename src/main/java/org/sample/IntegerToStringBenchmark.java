@@ -20,26 +20,64 @@ import java.util.concurrent.TimeUnit;
 public class
 IntegerToStringBenchmark {
 
-	int intValue;
-	
-	@Setup(Level.Iteration)
-	public void prepare() {
-		intValue = ThreadLocalRandom.current().nextInt();
-	}
-	
+
+    @Param({"0.0", "0.01", "0.5", "0.99"})
+    double nullProbability;
+
+    int intValue;
+    Integer intValueWrapped;
+    Integer intValueWrappedNotNull;
+
+    @Setup(Level.Invocation)
+    public void prepare() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        intValue = random.nextInt();
+        if (random.nextDouble() < nullProbability) {
+            intValueWrapped = null;
+        } else {
+            intValueWrapped = intValue;
+        }
+        intValueWrappedNotNull=intValue;
+    }
+
     @Benchmark
     public String testStringConcat() {
         return "" + intValue;
     }
-    
+
     @Benchmark
+    public String testStringConcatWrapped() {
+        return "" + intValueWrapped;
+    }
+    @Benchmark
+    public String testStringConcatWrappedNotNull() {
+        return "" + intValueWrappedNotNull;
+    }
+
+    /*@Benchmark
     public String testIntegerToString() {
-		return Integer.toString(intValue);
+        return Integer.toString(intValue);
     }
 
     @Benchmark
     public String testIntWrapperToString() {
         return Integer.valueOf(intValue).toString();
+    }*/
+
+    @Benchmark
+    public String stringValueOfPrimitive() {
+        return String.valueOf(intValue);
     }
+
+    @Benchmark
+    public String stringValueOfWrapped() {
+        return String.valueOf(intValueWrapped);
+    }
+
+    @Benchmark
+    public String stringValueOfWrappedNotNull() {
+        return String.valueOf(intValueWrappedNotNull);
+    }
+
 
 }
