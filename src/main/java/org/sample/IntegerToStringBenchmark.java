@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  *
  * You can run this test via the command line:
  *    $ mvn clean install
- *    $ java -jar target/benchmarks.jar -wi 5 -i 5 -f 1
+ *    $ java -jar target/benchmarks.jar -wi 10 -i 10 -f 4
  *    (we requested 5 warmup/measurement iterations, single fork)
  */
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
